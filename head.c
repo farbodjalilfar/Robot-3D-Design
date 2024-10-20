@@ -1,0 +1,71 @@
+#define GL_SILENCE_DEPRECATION
+#ifdef __APPLE__
+#include <glut/glut.h>
+#else
+#include <windows.h>
+#include <gl/glut.h>
+#endif
+#include "head.h"
+
+// Dynamic Clipping function
+void setClippingPlane(float a, float b, float c, float d) {
+    GLdouble clipPlane[] = {a, b, c, d};
+    glClipPlane(GL_CLIP_PLANE0, clipPlane);
+    glEnable(GL_CLIP_PLANE0);
+}
+
+// Disable clipping
+void disableClippingPlane() {
+    glDisable(GL_CLIP_PLANE0);
+}
+
+// Draw the head with dynamic clipping and full cylinder continuation
+void drawHead(float radius, float scale_y) {
+    GLUquadric* quad = gluNewQuadric();   // Create a new quadric object for the cylinder
+
+    // Apply the tilt to the whole head and cylinder assembly
+    glPushMatrix();
+    glRotatef(15.0, 1.0, 0.0, 0.0);  // Rotate the entire structure forward by 15 degrees along the X-axis
+
+    // Draw the head (sphere)
+    glPushMatrix();
+    setClippingPlane(0.0, 1.0, 0.0, 0);  // Clipping plane for the head
+    glScalef(1.0, scale_y, 1.0);         // Scale the sphere vertically
+    glutSolidSphere(radius, 20, 20);     // Sphere representing the head
+    disableClippingPlane();
+    glPopMatrix();
+
+    // Draw the full cylinder below the head, with rotation over the X axis
+    glPushMatrix();
+    glTranslatef(0.0, radius * scale_y - 0.6, 0.0);  // Position the cylinder at the bottom of the sphere
+    glRotatef(90.0, 1.0, 0.0, 0.0);                  // Rotate the cylinder along the X-axis
+
+    // Draw the cylinder
+    gluCylinder(quad, radius, radius, 0.5, 20, 10);  // Full cylinder: (top radius, bottom radius, height)
+
+    // Draw the top and bottom caps of the cylinder to make it full
+    glPushMatrix();
+    gluDisk(quad, 0.0, radius, 20, 1);  // Top cap
+    glTranslatef(0.0, 0.0, 0.5);        // Move to the bottom of the cylinder
+    gluDisk(quad, 0.0, radius, 20, 1);  // Bottom cap
+    glPopMatrix();
+
+    // Eyes: Create holes on both sides of the cylinder (parallel) and color them green
+    glPushMatrix();
+    
+    // Draw the left eye
+    glTranslatef(-radius * 0.5, radius * 0.2 + 0.5, 0.0);  // Position the left eye hole
+    glColor3f(0.0, 1.0, 0.0);  // Set the eye color to green
+    glutSolidSphere(0.2, 20, 20);  // Eye hole size
+
+    // Draw the right eye
+    glTranslatef(radius, 0.0, 0.0);  // Position the right eye hole
+    glutSolidSphere(0.2, 20, 20);  // Eye hole size
+
+    glPopMatrix();  // End eye transformation
+
+    glPopMatrix();  // End of cylinder transformation
+
+    glPopMatrix();  // End of the overall head and cylinder transformation
+    gluDeleteQuadric(quad);  // Free the quadric object
+}
