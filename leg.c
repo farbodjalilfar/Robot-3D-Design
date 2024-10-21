@@ -6,6 +6,8 @@
 #include <gl/glut.h>
 #endif
 #include "leg.h"
+extern float rotate_leg;
+extern float leg_rotation_angle;
 
 // Function to draw a cylinder for the leg
 void drawLegCylinder(float radius, float height) {
@@ -29,39 +31,55 @@ void drawFoot() {
 
 // Draw the leg (can be used for both left and right)
 void drawLeg() {
-    // Upper leg (vertical cylinder)
-    glPushMatrix();
-        glRotatef(-90, 1.0f, 0.0f, 0.0f);   // Rotate around the X-axis to make the cylinder vertical
-        glTranslatef(0.0f, 1.0f, -1.0f);    // Move the upper leg upwards along Y-axis
-        drawLegCylinder(0.25f, 1.8f);       // Draw upper leg: radius 0.25, height 1.8
-    glPopMatrix();
+    if (rotate_leg) {
+        // Apply the rotation between -30 and +30 degrees
+        if (leg_rotation_angle > 30.0f || leg_rotation_angle < -30.0f) {
+            // Reverse the direction when limits are reached
+            leg_rotation_angle = (leg_rotation_angle > 30.0f) ? 30.0f : -30.0f;
+        }
+        // Increment or decrement the rotation angle based on the direction
+        leg_rotation_angle += (leg_rotation_angle > 0) ? -1.0f : 1.0f;
+    }
 
-    // Knee joint (torus) with rotation around Y-axis
     glPushMatrix();
-        glRotatef(-180, 1.0f, 0.0f, 0.0f);  // Rotate around the X-axis to make the torus vertical
-        glRotatef(90, 0.0f, 1.0f, 0.0f);    // Additional rotation around the Y-axis (90 degrees)
-        glTranslatef(-1.0f, 1.2f, 0.0f);    // Position the torus between the upper and lower leg
-        drawTorus(0.18f, 0.15f);            // Draw torus with inner radius 0.18 and outer radius 0.15
-    glPopMatrix();
+        // Rotate the entire leg based on the leg_rotation_angle
+        glTranslatef(0.0f, 0.0f, 0.0f);  // Adjust the position if necessary
+        glRotatef(leg_rotation_angle, 1.0f, 0.0f, 0.0f);  // Apply rotation to the leg
 
-    // Lower leg (vertical cylinder)
-    glPushMatrix();
-        glRotatef(-90, 1.0f, 0.0f, 0.0f);   // Rotate around the X-axis to make the cylinder vertical
-        glTranslatef(0.0f, 1.0f, -2.8f);    // Move the lower leg downwards along Y-axis
-        drawLegCylinder(0.25f, 1.5f);       // Draw lower leg: radius 0.25, height 1.5
-    glPopMatrix();
+        // Upper leg (vertical cylinder)
+        glPushMatrix();
+            glRotatef(-90, 1.0f, 0.0f, 0.0f);   // Rotate around the X-axis to make the cylinder vertical
+            glTranslatef(0.0f, 1.0f, -1.0f);    // Move the upper leg upwards along Y-axis
+            drawLegCylinder(0.25f, 1.8f);       // Draw upper leg: radius 0.25, height 1.8
+        glPopMatrix();
 
-    // Joint between leg and foot (torus)
-    glPushMatrix();
-        glRotatef(-180, 1.0f, 0.0f, 0.0f);  // Rotate around the X-axis to make the torus vertical
-        glRotatef(90, 0.0f, 1.0f, 0.0f);    // Additional rotation around the Y-axis (90 degrees)
-        glTranslatef(-1.0f, 2.8f, 0.0f);    // Position the torus between the lower leg and foot
-        drawTorus(0.18f, 0.13f);            // Draw torus with inner radius 0.18 and outer radius 0.15
-    glPopMatrix();
+        // Knee joint (torus)
+        glPushMatrix();
+            glRotatef(-180, 1.0f, 0.0f, 0.0f);  // Rotate around the X-axis to make the torus vertical
+            glRotatef(90, 0.0f, 1.0f, 0.0f);    // Additional rotation around the Y-axis
+            glTranslatef(-1.0f, 1.2f, 0.0f);    // Position the torus between the upper and lower leg
+            drawTorus(0.18f, 0.15f);            // Draw torus with inner radius 0.18 and outer radius 0.15
+        glPopMatrix();
 
-    // Foot (connected to the lower leg)
-    glPushMatrix();
-        glTranslatef(0.0f, -3.0f, -0.8f);   // Move the foot downwards from the lower leg
-        drawFoot();                         // Draw the foot
+        // Lower leg (vertical cylinder)
+        glPushMatrix();
+            glRotatef(-90, 1.0f, 0.0f, 0.0f);   // Rotate around the X-axis to make the cylinder vertical
+            glTranslatef(0.0f, 1.0f, -2.8f);    // Move the lower leg downwards along Y-axis
+            drawLegCylinder(0.25f, 1.5f);       // Draw lower leg: radius 0.25, height 1.5
+        glPopMatrix();
+
+        // Joint between leg and foot (torus)
+        glPushMatrix();
+            glRotatef(-180, 1.0f, 0.0f, 0.0f);  // Rotate around the X-axis to make the torus vertical
+            glRotatef(90, 0.0f, 1.0f, 0.0f);    // Additional rotation around the Y-axis
+            glTranslatef(-1.0f, 2.8f, 0.0f);    // Position the torus between the lower leg and foot
+            drawTorus(0.18f, 0.13f);            // Draw torus with inner radius 0.18 and outer radius 0.15
+        glPopMatrix();
+
+        // Foot (connected to the lower leg)
+        glPushMatrix();
+            glTranslatef(0.0f, -3.0f, -0.8f);   // Move the foot downwards from the lower leg
+            drawFoot();                         // Draw the foot
+        glPopMatrix();
     glPopMatrix();
 }

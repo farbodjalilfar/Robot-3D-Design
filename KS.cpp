@@ -21,6 +21,8 @@ float rotate_y = 0.0;       // Rotation around y-axis (yaw)
 float arm_rotation_angle = 180.0f; // Global variable to store arm rotation angle
 int rotate_cannon = 0;  // Global flag to toggle cannon rotation
 float cannon_rotation_angle = 0.0f;  // Global variable to store cannon rotation angle
+float leg_rotation_angle = 0.0f;  // Leg rotation angle
+bool rotate_leg = false;          // Toggle for leg movement
 
 // Include the header files for body parts
 #include "head.h"
@@ -146,15 +148,6 @@ void reshape(int w, int h) {
 /* Handles input from arrow keys and special keys for zoom and rotation */
 void arrowKeys(int key, int x, int y) {
     switch (key) {
-    case GLUT_KEY_DOWN:
-        head_scale_y -= 0.05; // Adjust head scaling
-        if (head_scale_y < 0.1) head_scale_y = 0.1;
-        glutPostRedisplay();
-        break;
-    case GLUT_KEY_UP:
-        head_scale_y += 0.05; // Adjust head scaling
-        glutPostRedisplay();
-        break;
     case GLUT_KEY_LEFT:
         rotate_y -= 5.0; // Rotate left (y-axis)
         glutPostRedisplay();
@@ -197,11 +190,24 @@ void keyboard(unsigned char key, int x, int y) {
     case 'C': // Rotate arm clockwise
         arm_rotation_angle += 5.0f;
         if (arm_rotation_angle > 360.0f) arm_rotation_angle -= 360.0f;  // Reset after a full rotation
-        glutPostRedisplay();
+        break;
+    case 'r':  // Toggle cannon rotation
+        rotate_cannon = !rotate_cannon;  // Toggle the flag
+        break;
+    case 'l':  // Toggle leg rotation
+        rotate_leg = !rotate_leg;  // Toggle the flag
         break;
     default:
         break;
     }
+}
+
+void update(int value) {
+    // Update your scene here, for example by adjusting angles for rotation
+    glutPostRedisplay();  // Request a redraw of the scene
+    
+    // Set up the next timer call in 1000ms / 30fps = ~33ms
+    glutTimerFunc(33, update, 0);
 }
 
 /* Main Program */
@@ -216,6 +222,9 @@ int main(int argc, char **argv) {
     glutReshapeFunc(reshape);
     glutSpecialFunc(arrowKeys);    // For arrow keys and special keys
     glutKeyboardFunc(keyboard);    // For standard keys
+
+    glutTimerFunc(33, update, 0);
+    
     glutMainLoop();
     return 0;
 }
