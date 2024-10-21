@@ -18,7 +18,7 @@ float head_scale_y = 0.67;  // Vertical scaling factor for the head
 float zoom = 15.0;          // Distance from the robot (for zooming)
 float rotate_x = 0.0;       // Rotation around x-axis (pitch)
 float rotate_y = 0.0;       // Rotation around y-axis (yaw)
-float arm_rotation_angle = 0.0f; // Global variable to store arm rotation angle
+float arm_rotation_angle = 180.0f; // Global variable to store arm rotation angle
 
 // Include the header files for body parts
 #include "head.h"
@@ -46,6 +46,20 @@ void init(int w, int h) {
     glEnable(GL_LIGHT1);
     glEnable(GL_STENCIL_TEST);  // Enable the stencil buffer
     glClearStencil(0);          // Clear the stencil buffer
+}
+
+// Function to set material properties for metallic color (ensures proper lighting)
+void setMaterialColor(float r, float g, float b) {
+    GLfloat mat_ambient[] = { r * 0.3f, g * 0.3f, b * 0.3f, 1.0f };
+    GLfloat mat_diffuse[] = { r, g, b, 1.0f };
+    GLfloat mat_specular[] = { 0.5f, 0.5f, 0.5f, 1.0f };  // Slight metallic shine
+    GLfloat mat_shininess[] = { 50.0f };
+    
+    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+    setMaterialColor(0.5f, 0.5f, 0.5f);
 }
 
 // Hierarchical robot design
