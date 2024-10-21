@@ -92,6 +92,11 @@ void drawArm(int hasCannon) {
         glPopMatrix();
 
         glPopMatrix();  // End rotation of cannon
+    }else{
+        glPushMatrix();
+            glTranslatef(0.0f, 0.0f, -2.6f);  // Position the cannon at the end of the arm
+            glutSolidSphere(0.3f, 20, 20);
+        glPopMatrix();
     }
 
     glPopMatrix();  // End the entire arm transformation

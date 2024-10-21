@@ -6,6 +6,7 @@
 #include <gl/glut.h>
 #endif
 #include "head.h"
+extern float head_rotation_angle;
 
 // Dynamic Clipping function
 void setClippingPlane(float a, float b, float c, float d) {
@@ -32,6 +33,7 @@ void drawHead(float radius, float scale_y) {
 
     // Apply the tilt to the whole head and cylinder assembly
     glRotatef(15.0, 1.0, 0.0, 0.0);  // Rotate the entire structure forward by 15 degrees along the X-axis
+    glRotatef(head_rotation_angle, 0.0f, 1.0f, 0.0f); 
 
     // Draw the head (sphere)
     glPushMatrix();

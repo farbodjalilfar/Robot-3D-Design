@@ -19,6 +19,7 @@ float zoom = 15.0;          // Distance from the robot (for zooming)
 float rotate_x = 0.0;       // Rotation around x-axis (pitch)
 float rotate_y = 0.0;       // Rotation around y-axis (yaw)
 float arm_rotation_angle = 180.0f; // Global variable to store arm rotation angle
+float head_rotation_angle = 0.0f; // Global variable to store arm rotation angle
 int rotate_cannon = 0;  // Global flag to toggle cannon rotation
 float cannon_rotation_angle = 0.0f;  // Global variable to store cannon rotation angle
 float leg_rotation_angle = 0.0f;  // Leg rotation angle
@@ -188,6 +189,15 @@ void keyboard(unsigned char key, int x, int y) {
         break;
     case 'C': // Rotate arm clockwise
         arm_rotation_angle += 5.0f;
+        if (arm_rotation_angle > 360.0f) arm_rotation_angle -= 360.0f;  // Reset after a full rotation
+        break;
+    case 'h': // Rotate arm counterclockwise
+        head_rotation_angle -= 5.0f;
+        if (arm_rotation_angle < -360.0f) arm_rotation_angle += 360.0f;  // Reset after a full rotation
+        glutPostRedisplay();
+        break;
+    case 'H': // Rotate arm clockwise
+        head_rotation_angle += 5.0f;
         if (arm_rotation_angle > 360.0f) arm_rotation_angle -= 360.0f;  // Reset after a full rotation
         break;
     case 'r':  // Toggle cannon rotation
