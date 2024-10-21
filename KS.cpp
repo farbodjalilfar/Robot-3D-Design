@@ -19,6 +19,8 @@ float zoom = 15.0;          // Distance from the robot (for zooming)
 float rotate_x = 0.0;       // Rotation around x-axis (pitch)
 float rotate_y = 0.0;       // Rotation around y-axis (yaw)
 float arm_rotation_angle = 180.0f; // Global variable to store arm rotation angle
+int rotate_cannon = 0;  // Global flag to toggle cannon rotation
+float cannon_rotation_angle = 0.0f;  // Global variable to store cannon rotation angle
 
 // Include the header files for body parts
 #include "head.h"
@@ -46,20 +48,6 @@ void init(int w, int h) {
     glEnable(GL_LIGHT1);
     glEnable(GL_STENCIL_TEST);  // Enable the stencil buffer
     glClearStencil(0);          // Clear the stencil buffer
-}
-
-// Function to set material properties for metallic color (ensures proper lighting)
-void setMaterialColor(float r, float g, float b) {
-    GLfloat mat_ambient[] = { r * 0.3f, g * 0.3f, b * 0.3f, 1.0f };
-    GLfloat mat_diffuse[] = { r, g, b, 1.0f };
-    GLfloat mat_specular[] = { 0.5f, 0.5f, 0.5f, 1.0f };  // Slight metallic shine
-    GLfloat mat_shininess[] = { 50.0f };
-    
-    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-    setMaterialColor(0.5f, 0.5f, 0.5f);
 }
 
 // Hierarchical robot design
@@ -183,6 +171,10 @@ void keyboard(unsigned char key, int x, int y) {
     case 'C': // Rotate arm clockwise
         arm_rotation_angle += 5.0f;
         if (arm_rotation_angle > 360.0f) arm_rotation_angle -= 360.0f;  // Reset after a full rotation
+        glutPostRedisplay();
+        break;
+    case 'r':  // Toggle cannon rotation
+        rotate_cannon = !rotate_cannon;  // Toggle the flag
         glutPostRedisplay();
         break;
     default:

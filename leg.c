@@ -38,7 +38,6 @@ void drawLeg() {
 
     // Knee joint (torus) with rotation around Y-axis
     glPushMatrix();
-        setMaterialColor(0.4f, 0.4f, 0.4f);  // Darker gray for the knee joint
         glRotatef(-180, 1.0f, 0.0f, 0.0f);  // Rotate around the X-axis to make the torus vertical
         glRotatef(90, 0.0f, 1.0f, 0.0f);    // Additional rotation around the Y-axis (90 degrees)
         glTranslatef(-1.0f, 1.2f, 0.0f);    // Position the torus between the upper and lower leg
@@ -47,7 +46,6 @@ void drawLeg() {
 
     // Lower leg (vertical cylinder)
     glPushMatrix();
-        setMaterialColor(0.5f, 0.5f, 0.5f);  // Light gray for the lower leg
         glRotatef(-90, 1.0f, 0.0f, 0.0f);   // Rotate around the X-axis to make the cylinder vertical
         glTranslatef(0.0f, 1.0f, -2.8f);    // Move the lower leg downwards along Y-axis
         drawLegCylinder(0.25f, 1.5f);       // Draw lower leg: radius 0.25, height 1.5
@@ -55,7 +53,6 @@ void drawLeg() {
 
     // Joint between leg and foot (torus)
     glPushMatrix();
-        setMaterialColor(0.4f, 0.4f, 0.4f);  // Darker gray for the joint
         glRotatef(-180, 1.0f, 0.0f, 0.0f);  // Rotate around the X-axis to make the torus vertical
         glRotatef(90, 0.0f, 1.0f, 0.0f);    // Additional rotation around the Y-axis (90 degrees)
         glTranslatef(-1.0f, 2.8f, 0.0f);    // Position the torus between the lower leg and foot
@@ -64,7 +61,6 @@ void drawLeg() {
 
     // Foot (connected to the lower leg)
     glPushMatrix();
-        setMaterialColor(0.2f, 0.2f, 0.2f);  // Dark gray for the foot
         glTranslatef(0.0f, -3.0f, -0.8f);   // Move the foot downwards from the lower leg
         drawFoot();                         // Draw the foot
     glPopMatrix();

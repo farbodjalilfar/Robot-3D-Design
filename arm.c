@@ -6,6 +6,8 @@
 #include <gl/glut.h>
 #endif
 extern float arm_rotation_angle;
+extern float rotate_cannon;
+extern float cannon_rotation_angle;
 
 void drawCylinder(float radius, float height) {
     GLUquadric *quad;
@@ -21,7 +23,7 @@ void drawArm(int hasCannon) {
     glTranslatef(0.0f, 1.0f, 0.3f);  // Move to the shoulder joint
     
     // Rotate the entire arm based on the arm_rotation_angle
-    glRotatef(arm_rotation_angle, 1.0, 0.0, 0.0);  // Rotate around the Z-axis
+    glRotatef(arm_rotation_angle, 1.0, 0.0, 0.0);  // Rotate around the X-axis
     
     // Now draw the shoulder joint sphere (center of rotation)
     glutSolidSphere(0.5f, 35, 35);   // Create the shoulder sphere (radius 0.3)
@@ -47,35 +49,50 @@ void drawArm(int hasCannon) {
     glPopMatrix();
 
     if(hasCannon) {
-    // Draw the cube (cannon base)
-    glPushMatrix();
-        glTranslatef(0.0f, 0.0f, -2.6f);  // Position the cannon at the end of the arm
-        glScalef(0.8f, 0.8f, 0.1f);      // Scale to the desired cannon size
-        glutSolidCube(1.0);              // Draw the cube
-    glPopMatrix();
+        // Apply cannon rotation if the rotation is active
+        if (rotate_cannon) {
+            cannon_rotation_angle += 2.0f;  // Increment rotation
+            if (cannon_rotation_angle > 360.0f) cannon_rotation_angle -= 360.0f;  // Keep within 360 degrees
+        }
 
-    // Add a cylinder on top of the cube
-    glPushMatrix();
-        glTranslatef(0.2f, 0.2f, -3.0f);  // Position the cylinder slightly above the cube
-        glRotatef(90, 0.0f, 0.0f, 1.0f);  // Rotate 90 degrees around the Y-axis
-        drawCylinder(0.1f, 0.5f);         // Radius 0.2, height 1.0 (adjust as needed)
-    glPopMatrix();
-    glPushMatrix();
-        glTranslatef(-0.2f, -0.2f, -3.0f);  // Position the cylinder slightly above the cube
-        glRotatef(90, 0.0f, 0.0f, 1.0f);  // Rotate 90 degrees around the Y-axis
-        drawCylinder(0.1f, 0.5f);         // Radius 0.2, height 1.0 (adjust as needed)
-    glPopMatrix();
-    glPushMatrix();
-        glTranslatef(0.2f, -0.2f, -3.0f);  // Position the cylinder slightly above the cube
-        glRotatef(90, 0.0f, 0.0f, 1.0f);  // Rotate 90 degrees around the Y-axis
-        drawCylinder(0.1f, 0.5f);         // Radius 0.2, height 1.0 (adjust as needed)
-    glPopMatrix();
-    glPushMatrix();
-        glTranslatef(-0.2f, 0.2f, -3.0f);  // Position the cylinder slightly above the cube
-        glRotatef(90, 0.0f, 0.0f, 1.0f);  // Rotate 90 degrees around the Y-axis
-        drawCylinder(0.1f, 0.5f);         // Radius 0.2, height 1.0 (adjust as needed)
-    glPopMatrix();
-}
+        glPushMatrix();
+        // Rotate the cannon around the Z-axis
+        glRotatef(cannon_rotation_angle, 0.0f, 0.0f, 1.0f);  // Rotate cannon if enabled
+
+        // Draw the cube (cannon base)
+        glPushMatrix();
+            glTranslatef(0.0f, 0.0f, -2.6f);  // Position the cannon at the end of the arm
+            glScalef(0.8f, 0.8f, 0.1f);      // Scale to the desired cannon size
+            glutSolidCube(1.0);              // Draw the cube
+        glPopMatrix();
+
+        // Add a cylinder on top of the cube
+        glPushMatrix();
+            glTranslatef(0.2f, 0.2f, -3.0f);  // Position the cylinder slightly above the cube
+            glRotatef(90, 0.0f, 0.0f, 1.0f);  // Rotate 90 degrees around the Y-axis
+            drawCylinder(0.1f, 0.5f);         // Radius 0.2, height 1.0 (adjust as needed)
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(-0.2f, -0.2f, -3.0f);  // Position the cylinder slightly above the cube
+            glRotatef(90, 0.0f, 0.0f, 1.0f);  // Rotate 90 degrees around the Y-axis
+            drawCylinder(0.1f, 0.5f);         // Radius 0.2, height 1.0 (adjust as needed)
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(0.2f, -0.2f, -3.0f);  // Position the cylinder slightly above the cube
+            glRotatef(90, 0.0f, 0.0f, 1.0f);  // Rotate 90 degrees around the Y-axis
+            drawCylinder(0.1f, 0.5f);         // Radius 0.2, height 1.0 (adjust as needed)
+        glPopMatrix();
+
+        glPushMatrix();
+            glTranslatef(-0.2f, 0.2f, -3.0f);  // Position the cylinder slightly above the cube
+            glRotatef(90, 0.0f, 0.0f, 1.0f);  // Rotate 90 degrees around the Y-axis
+            drawCylinder(0.1f, 0.5f);         // Radius 0.2, height 1.0 (adjust as needed)
+        glPopMatrix();
+
+        glPopMatrix();  // End rotation of cannon
+    }
 
     glPopMatrix();  // End the entire arm transformation
 }
