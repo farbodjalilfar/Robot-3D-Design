@@ -19,19 +19,6 @@ void drawTorus(float innerRadius, float outerRadius) {
     glutSolidTorus(innerRadius, outerRadius, 30, 30);
 }
 
-// Function to set material properties for metallic color (ensures proper lighting)
-void setMaterialColor(float r, float g, float b) {
-    GLfloat mat_ambient[] = { r * 0.3f, g * 0.3f, b * 0.3f, 1.0f };
-    GLfloat mat_diffuse[] = { r, g, b, 1.0f };
-    GLfloat mat_specular[] = { 0.5f, 0.5f, 0.5f, 1.0f };  // Slight metallic shine
-    GLfloat mat_shininess[] = { 50.0f };
-    
-    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-}
-
 // Function to draw a simple foot (using a cube or scaled box)
 void drawFoot() {
     glPushMatrix();
@@ -44,7 +31,6 @@ void drawFoot() {
 void drawLeg() {
     // Upper leg (vertical cylinder)
     glPushMatrix();
-        setMaterialColor(0.5f, 0.5f, 0.5f);  // Light gray for the upper leg
         glRotatef(-90, 1.0f, 0.0f, 0.0f);   // Rotate around the X-axis to make the cylinder vertical
         glTranslatef(0.0f, 1.0f, -1.0f);    // Move the upper leg upwards along Y-axis
         drawLegCylinder(0.25f, 1.8f);       // Draw upper leg: radius 0.25, height 1.8
