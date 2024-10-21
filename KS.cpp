@@ -22,7 +22,7 @@ float arm_rotation_angle = 180.0f; // Global variable to store arm rotation angl
 int rotate_cannon = 0;  // Global flag to toggle cannon rotation
 float cannon_rotation_angle = 0.0f;  // Global variable to store cannon rotation angle
 float leg_rotation_angle = 0.0f;  // Leg rotation angle
-bool rotate_leg = false;          // Toggle for leg movement
+int rotate_leg = 0;          // Toggle for leg movement
 
 // Include the header files for body parts
 #include "head.h"
@@ -30,7 +30,6 @@ bool rotate_leg = false;          // Toggle for leg movement
 #include "torso.h"
 #include "arm.h"
 #include "leg.h"
-#include "cannon.h"
 
 /* Initialize the system */
 void init(int w, int h) {
@@ -120,13 +119,13 @@ void display(void) {
     // Left Leg (relative to the torso)
     glPushMatrix();
     glTranslatef(-0.8, -2.5, 0.0); // Position left leg below torso
-    drawLeg(); // Call the leg drawing function from leg.c
+    drawLeg(1); // Call the leg drawing function from leg.c
     glPopMatrix(); // End left leg transformation
 
     // Right Leg (relative to the torso)
     glPushMatrix();
     glTranslatef(0.8, -2.5, 0.0); // Position right leg below torso
-    drawLeg(); // Call the leg drawing function from leg.c
+    drawLeg(-1); // Call the leg drawing function from leg.c
     glPopMatrix(); // End right leg transformation
 
     glPopMatrix(); // End torso transformation

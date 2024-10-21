@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-void drawLeg();
+void drawLeg(int direction);
 
 #ifdef __cplusplus
 }
