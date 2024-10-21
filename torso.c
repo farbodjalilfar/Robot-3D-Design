@@ -69,12 +69,12 @@ void drawTorso() {
 
     // Push matrix for the cube underneath the torso
     glPushMatrix();
-    
+    glColor3f(0.3f, 0.3f, 0.3f);
     // Move and scale the cube underneath the torso
     glTranslatef(0.0, -1.0, -1.0);  // Move the cube downward (adjust values as needed)
     glScalef(1.0, 1.0, 1.0);        // Scale the cube to desired proportions
     glutSolidCube(1.0);              // Cube representing the base
-    
+    glColor3f(0.13f, 0.13f, 0.13f);
     glPopMatrix(); // End transformation for the lower cube
 
     // Push matrix for the torso

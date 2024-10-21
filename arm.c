@@ -26,8 +26,9 @@ void drawArm(int hasCannon) {
     glRotatef(arm_rotation_angle, 1.0, 0.0, 0.0);  // Rotate around the X-axis
     
     // Now draw the shoulder joint sphere (center of rotation)
+    glColor3f(0.3f, 0.3f, 0.3f);
     glutSolidSphere(0.5f, 35, 35);   // Create the shoulder sphere (radius 0.3)
-
+    glColor3f(0.13f, 0.13f, 0.13f);
     // Draw the rest of the arm relative to the shoulder joint
 
     // Shoulder Cylinder
@@ -39,7 +40,9 @@ void drawArm(int hasCannon) {
     // Joint arm
     glPushMatrix();
         glTranslatef(0.0f, 0.0f, -1.3f);  // Position the joint sphere
+        glColor3f(0.3f, 0.3f, 0.3f);
         glutSolidSphere(0.23f, 35, 35);   // Create a sphere joint
+        glColor3f(0.13f, 0.13f, 0.13f);
     glPopMatrix();
 
     // Wrist Cylinder
@@ -48,6 +51,7 @@ void drawArm(int hasCannon) {
         drawCylinder(0.2f, 2.0f);         // Radius 0.2, height 2.0
     glPopMatrix();
 
+    glColor3f(0.3f, 0.3f, 0.3f);
     if(hasCannon) {
         // Apply cannon rotation if the rotation is active
         if (rotate_cannon) {
@@ -98,6 +102,7 @@ void drawArm(int hasCannon) {
             glutSolidSphere(0.3f, 20, 20);
         glPopMatrix();
     }
+    glColor3f(0.13f, 0.13f, 0.13f);
 
     glPopMatrix();  // End the entire arm transformation
 }
