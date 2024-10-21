@@ -118,13 +118,13 @@ void display(void) {
 
     // Left Leg (relative to the torso)
     glPushMatrix();
-    glTranslatef(-0.8, -2.5, 0.0); // Position left leg below torso
+    glTranslatef(-0.6, -2.7, 0.0); // Position left leg below torso
     drawLeg(1); // Call the leg drawing function from leg.c
     glPopMatrix(); // End left leg transformation
 
     // Right Leg (relative to the torso)
     glPushMatrix();
-    glTranslatef(0.8, -2.5, 0.0); // Position right leg below torso
+    glTranslatef(0.6, -2.7, 0.0); // Position right leg below torso
     drawLeg(-1); // Call the leg drawing function from leg.c
     glPopMatrix(); // End right leg transformation
 
