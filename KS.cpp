@@ -78,13 +78,13 @@ void display(void) {
     // Left Arm (relative to the torso)
     glPushMatrix();
     glTranslatef(-1.2, 0, -1.3); // Position left arm relative to torso
-    drawArm(false); // Call the arm drawing function from arm.c
+    drawArm(0); // Call the arm drawing function from arm.c
     glPopMatrix(); // End left arm transformation
 
     // Right Arm (relative to the torso)
     glPushMatrix();
     glTranslatef(1.2, 0.0, -1.3); // Position right arm relative to torso
-    drawArm(true); // Call the arm drawing function from arm.c
+    drawArm(1); // Call the arm drawing function from arm.c
     glPopMatrix(); // End right arm transformation
 
     // Left Leg (relative to the torso)

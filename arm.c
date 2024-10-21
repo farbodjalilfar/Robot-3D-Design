@@ -43,14 +43,13 @@ void drawArm(int hasCannon) {
     // Wrist Cylinder
     glPushMatrix();
         glTranslatef(0.0f, 0.0f, -2.6f);  // Position at wrist height relative to the shoulder
-        drawCylinder(0.4f, 2.0f);         // Radius 0.2, height 2.0
+        drawCylinder(0.2f, 2.0f);         // Radius 0.2, height 2.0
     glPopMatrix();
 
     if(hasCannon){
-        // Cannon holder Cylinder
         glPushMatrix();
-            // glTranslatef(0.0f, 0.0f, -2.6f);  // Position at wrist height relative to the shoulder
-            drawCylinder(0.2f, 0.2f);         // Radius 0.2, height 2.0
+            glTranslatef(0.0f, 0.0f, -3.0f);  // Position the cannon at the end of the arm
+            drawCylinder(0.4f, 0.6f);         // Adjusted size for cannon
         glPopMatrix();
     }
 
