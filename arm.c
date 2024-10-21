@@ -17,22 +17,28 @@ void drawArm() {
     glPushMatrix();
     glRotatef(-100.0, 1.0, 0.0, 0.0);  // Rotate around X-axis by 90 degrees (to align with Y-axis)
 
+    // Add a sphere for the shoulder joint
+    glPushMatrix();
+        glTranslatef(0.0f, 1.0f, 0.3f);  // Position the sphere at the top of the shoulder
+        glutSolidSphere(0.5f, 35, 35);   // Create the shoulder sphere (radius 0.3)
+    glPopMatrix();
+
     // Shoulder Cylinder
     glPushMatrix();
-        glTranslatef(0.0f, 0.0f, -1.3f);  // Position at shoulder height
-        drawCylinder(0.2f, 1.0f);        // Radius 0.2, height 1.0
+        glTranslatef(0.0f, 1.0f, -1.0f);  // Position the cylinder under the shoulder sphere
+        drawCylinder(0.2f, 1.0f);         // Radius 0.2, height 1.0
     glPopMatrix();
 
     // Joint (shoulder to wrist)
     glPushMatrix();
-        glTranslatef(-0.0f, -0.0f, -1.3f);  // Move to the position between shoulder and wrist
+        glTranslatef(0.0f, 1.0f, -1.0f);  // Move to the position between shoulder and wrist
         glutSolidSphere(0.23f, 35, 35);   // Create a sphere joint
     glPopMatrix();
 
     // Wrist Cylinder
     glPushMatrix();
-        glTranslatef(0.0f, 0.0f, -2.3f);  // Position at wrist height
-        drawCylinder(0.2f, 1.0f);        // Radius 0.2, height 1.0
+        glTranslatef(0.0f, 1.0f, -2.0f);  // Position at wrist height
+        drawCylinder(0.2f, 2.0f);         // Radius 0.2, height 1.0
     glPopMatrix();
 
     glPopMatrix();  // End the entire arm transformation
