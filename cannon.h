@@ -1,11 +1,11 @@
-#ifndef ARM_H
-#define ARM_H
+#ifndef CANNON_H
+#define CANNON_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void drawArm(int);
+void drawCannon();
 
 #ifdef __cplusplus
 }

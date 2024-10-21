@@ -13,18 +13,20 @@
 #include <stdio.h>
 #include <math.h>
 
+// Adjustable parameters for robot parts
+float head_scale_y = 0.67;  // Vertical scaling factor for the head
+float zoom = 15.0;          // Distance from the robot (for zooming)
+float rotate_x = 0.0;       // Rotation around x-axis (pitch)
+float rotate_y = 0.0;       // Rotation around y-axis (yaw)
+float arm_rotation_angle = 0.0f; // Global variable to store arm rotation angle
+
 // Include the header files for body parts
 #include "head.h"
 #include "neck.h"
 #include "torso.h"
 #include "arm.h"
 #include "leg.h"
-
-// Adjustable parameters for robot parts
-float head_scale_y = 0.67;  // Vertical scaling factor for the head
-float zoom = 15.0;          // Distance from the robot (for zooming)
-float rotate_x = 0.0;       // Rotation around x-axis (pitch)
-float rotate_y = 0.0;       // Rotation around y-axis (yaw)
+#include "cannon.h"
 
 /* Initialize the system */
 void init(int w, int h) {
@@ -75,14 +77,14 @@ void display(void) {
 
     // Left Arm (relative to the torso)
     glPushMatrix();
-    glTranslatef(-1.2, 1.0, 0.0); // Position left arm relative to torso
-    drawArm(); // Call the arm drawing function from arm.c
+    glTranslatef(-1.2, 0, -1.3); // Position left arm relative to torso
+    drawArm(false); // Call the arm drawing function from arm.c
     glPopMatrix(); // End left arm transformation
 
     // Right Arm (relative to the torso)
     glPushMatrix();
-    glTranslatef(1.2, 1.0, 0.0); // Position right arm relative to torso
-    drawArm(); // Call the arm drawing function from arm.c
+    glTranslatef(1.2, 0.0, -1.3); // Position right arm relative to torso
+    drawArm(true); // Call the arm drawing function from arm.c
     glPopMatrix(); // End right arm transformation
 
     // Left Leg (relative to the torso)
@@ -157,6 +159,16 @@ void keyboard(unsigned char key, int x, int y) {
         break;
     case 'd':
         rotate_x += 5.0;  // Rotate down (x-axis)
+        glutPostRedisplay();
+        break;
+    case 'c': // Rotate arm counterclockwise
+        arm_rotation_angle -= 5.0f;
+        if (arm_rotation_angle < -360.0f) arm_rotation_angle += 360.0f;  // Reset after a full rotation
+        glutPostRedisplay();
+        break;
+    case 'C': // Rotate arm clockwise
+        arm_rotation_angle += 5.0f;
+        if (arm_rotation_angle > 360.0f) arm_rotation_angle -= 360.0f;  // Reset after a full rotation
         glutPostRedisplay();
         break;
     default:
