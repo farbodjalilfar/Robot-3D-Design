@@ -22,7 +22,10 @@ float arm_rotation_angle = -90.0f; // Global variable to store arm rotation angl
 float head_rotation_angle = 0.0f; // Global variable to store arm rotation angle
 int rotate_cannon = 0;  // Global flag to toggle cannon rotation
 float cannon_rotation_angle = 0.0f;  // Global variable to store cannon rotation angle
-float leg_rotation_angle = 0.0f;  // Leg rotation angle
+float leg_rotation_angleR = 0.0f;  // Leg rotation angle
+float knee_rotation_angleR = 0.0f;  // Leg rotation angle
+float leg_rotation_angleL = 0.0f;  // Leg rotation angle
+float knee_rotation_angleL = 0.0f;  // Leg rotation angle
 int rotate_leg = 0;          // Toggle for leg movement
 
 // Include the header files for body parts
@@ -148,6 +151,14 @@ void reshape(int w, int h) {
 /* Handles input from arrow keys and special keys for zoom and rotation */
 void arrowKeys(int key, int x, int y) {
     switch (key) {
+    case GLUT_KEY_UP:
+        rotate_x -= 5.0; // Rotate up (x-axis)
+        glutPostRedisplay();
+        break;
+    case GLUT_KEY_DOWN:
+        rotate_x += 5.0; // Rotate down (x-axis)
+        glutPostRedisplay();
+        break;
     case GLUT_KEY_LEFT:
         rotate_y -= 5.0; // Rotate left (y-axis)
         glutPostRedisplay();
@@ -164,31 +175,47 @@ void arrowKeys(int key, int x, int y) {
 /* Handles input from standard keys for zoom and rotation */
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
-    case 'w':
+    case '1':
         zoom -= 0.5;  // Zoom in
         if (zoom < 5.0) zoom = 5.0;  // Limit minimum zoom
         glutPostRedisplay();
         break;
-    case 's':
+    case '2':
         zoom += 0.5;  // Zoom out
         if (zoom > 30.0) zoom = 30.0;  // Limit maximum zoom
         glutPostRedisplay();
         break;
-    case 'a':
-        rotate_x -= 5.0;  // Rotate up (x-axis)
-        glutPostRedisplay();
-        break;
-    case 'd':
-        rotate_x += 5.0;  // Rotate down (x-axis)
-        glutPostRedisplay();
-        break;
-    case 'c': // Rotate arm counterclockwise
+    case 'a': // Rotate arm counterclockwise
         arm_rotation_angle -= 5.0f;
         if (arm_rotation_angle < -360.0f) arm_rotation_angle += 360.0f;  // Reset after a full rotation
         glutPostRedisplay();
         break;
-    case 'C': // Rotate arm clockwise
+    case 'A': // Rotate arm clockwise
         arm_rotation_angle += 5.0f;
+        if (arm_rotation_angle > 360.0f) arm_rotation_angle -= 360.0f;  // Reset after a full rotation
+        break;
+    case 'k': // Rotate knee clockwise
+        knee_rotation_angleR += 5.0f;
+        if (arm_rotation_angle > 360.0f) arm_rotation_angle -= 360.0f;  // Reset after a full rotation
+        knee_rotation_angleL += 5.0f;
+        if (arm_rotation_angle > 360.0f) arm_rotation_angle -= 360.0f;  // Reset after a full rotation
+        break;
+    case 'K': // Rotate knee counterclockwise
+        knee_rotation_angleR -= 5.0f;
+        if (arm_rotation_angle < -360.0f) arm_rotation_angle += 360.0f;  // Reset after a full rotation
+        knee_rotation_angleL -= 5.0f;
+        if (arm_rotation_angle < -360.0f) arm_rotation_angle += 360.0f;  // Reset after a full rotation
+        break;
+    case 'l': // Rotate leg counterclockwise
+        leg_rotation_angleR -= 5.0f;
+        if (arm_rotation_angle < -360.0f) arm_rotation_angle += 360.0f;  // Reset after a full rotation
+        leg_rotation_angleL -= 5.0f;
+        if (arm_rotation_angle < -360.0f) arm_rotation_angle += 360.0f;  // Reset after a full rotation
+        break;
+    case 'L': // Rotate leg clockwise
+        leg_rotation_angleR += 5.0f;
+        if (arm_rotation_angle > 360.0f) arm_rotation_angle -= 360.0f;  // Reset after a full rotation
+        leg_rotation_angleL += 5.0f;
         if (arm_rotation_angle > 360.0f) arm_rotation_angle -= 360.0f;  // Reset after a full rotation
         break;
     case 'h': // Rotate arm counterclockwise
@@ -200,11 +227,20 @@ void keyboard(unsigned char key, int x, int y) {
         head_rotation_angle += 5.0f;
         if (arm_rotation_angle > 360.0f) arm_rotation_angle -= 360.0f;  // Reset after a full rotation
         break;
-    case 'r':  // Toggle cannon rotation
-        rotate_cannon = !rotate_cannon;  // Toggle the flag
+    case 'w': // Rotate arm counterclockwise
+        rotate_leg = 1;  // Toggle the flag
         break;
-    case 'l':  // Toggle leg rotation
-        rotate_leg = !rotate_leg;  // Toggle the flag
+    case 'W': // Rotate arm clockwise
+        leg_rotation_angleR = 0.0f;  // Reset the leg rotation angle
+        leg_rotation_angleL = 0.0f;  // Reset the leg rotation angle
+        knee_rotation_angleR = 0.0f;  // Reset the leg rotation angle
+        knee_rotation_angleL = 0.0f;  // Reset the leg rotation angle
+        break;
+    case 'c':  // Toggle cannon rotation
+        rotate_cannon = 1;  // Toggle the flag
+        break;
+    case 'C':  // Toggle cannon rotation
+        rotate_cannon = 0;  // Toggle the flag
         break;
     default:
         break;
