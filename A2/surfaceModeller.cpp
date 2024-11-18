@@ -992,6 +992,11 @@ void mouseButtonHandler3D(int button, int state, int x, int y)
 void mouseScrollWheelHandler3D(int button, int dir, int xMouse, int yMouse) 
 {
 	// Fill in this code for zooming in and out
+	if (dir > 0) radius -= 0.5; // Zoom in
+    else radius += 0.5;         // Zoom out
+    if (radius < 1.0) radius = 1.0; // Prevent zooming too close
+    if (radius > 50.0) radius = 50.0; // Prevent zooming too far
+    glutPostRedisplay();
 
 }
 
@@ -1002,10 +1007,18 @@ void mouseMotionHandler3D(int x, int y)
 	if (currentButton == GLUT_LEFT_BUTTON)
 	{
       // Fill in this code to control camera "orbiting" around surface
+	  // Adjust azimuth (horizontal rotation)
+        GLdouble theta = atan2(eyeZ, eyeX) + dx * 0.01;
+        radius = sqrt(eyeX * eyeX + eyeZ * eyeZ);
+        eyeX = radius * cos(theta);
+        eyeZ = radius * sin(theta);
 	}
 	if (currentButton == GLUT_RIGHT_BUTTON) 
 	{
       // Fill in this code to control camera elevation. Limit the elevation angle
+	  eyeY += dy * 0.05;
+        if (eyeY > 5.0) eyeY = 5.0; // Limit elevation
+        if (eyeY < -5.0) eyeY = -5.0;
 	}
 	else if (currentButton == GLUT_MIDDLE_BUTTON) 
 	{
