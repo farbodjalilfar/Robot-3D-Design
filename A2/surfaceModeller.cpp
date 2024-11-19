@@ -642,38 +642,42 @@ void reshape3D(int w, int h)
 
 void display3D()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glLoadIdentity();
-	// Set up the Viewing Transformation (V matrix)	
-	gluLookAt(eyeX, eyeY, eyeZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    glLoadIdentity();
 
-	drawGround();
-	
+    // Adjust the camera's position based on the `radius` for zoom
+    gluLookAt(
+        eyeX, eyeY, radius, // Updated camera position
+        0.0, 0.0, 0.0,     // Look at origin
+        0.0, 1.0, 0.0      // Up vector
+    );
 
-    // Build and Draw Surface of Revolution (Quad Mesh)
-	buildVertexArray();
-	buildQuadArray();
-	computeQuadNormals();
-	computeVertexNormals();
-	
-	// Draw quad mesh
-	glPushMatrix();
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, quadMat_ambient);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, quadMat_specular);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, quadMat_diffuse);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, quadMat_shininess);
+    drawGround();
 
-	if (drawAsLines)
-	  drawQuadsAsLines();
-	else if (drawAsPoints)
-		drawQuadsAsPoints();
-	else
-	  drawQuads();
+    // Build and draw the surface of revolution (Quad Mesh)
+    buildVertexArray();
+    buildQuadArray();
+    computeQuadNormals();
+    computeVertexNormals();
 
-	glPopMatrix();
-	glutSwapBuffers();
+    glPushMatrix();
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, quadMat_ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, quadMat_specular);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, quadMat_diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, quadMat_shininess);
+
+    if (drawAsLines)
+        drawQuadsAsLines();
+    else if (drawAsPoints)
+        drawQuadsAsPoints();
+    else
+        drawQuads();
+
+    glPopMatrix();
+    glutSwapBuffers();
 }
+
 
 void drawGround() 
 {
@@ -1066,37 +1070,37 @@ void exportMesh(const char* filename) {
 
 void keyboardHandler3D(unsigned char key, int x, int y)
 {
-	
-	switch (key)
-	{
-	case 'q':
-	case 'Q':
-	case 27:
-		// Esc, q, or Q key = Quit 
-		exit(0);
-		break;
-	case 'e':  // Export the mesh
+    switch (key)
+    {
+    case 'q':
+    case 'Q':
+    case 27: // Escape key
+        exit(0);
+        break;
+    case 'e': // Export the mesh
         exportMesh("surface_mesh.obj");
         break;
-	case 'l':
-		if (drawAsLines)
-			drawAsLines = false;
-		else
-			drawAsLines = true;
-		break;
-	case 'p':
-		if (drawAsPoints)
-			drawAsPoints = false;
-		else
-			drawAsPoints = true;
-		break;
-	case 'n':
-		if (drawNormals)
-			drawNormals = false;
-		else
-			drawNormals = true;
-	default:
-		break;
-	}
-	glutPostRedisplay();
+    case 'l': // Toggle line drawing mode
+        drawAsLines = !drawAsLines;
+        break;
+    case 'p': // Toggle point drawing mode
+        drawAsPoints = !drawAsPoints;
+        break;
+    case 'n': // Toggle normal vectors
+        drawNormals = !drawNormals;
+        break;
+    case '+': // Zoom in
+        radius -= 0.5; // Move camera closer
+        if (radius < 1.0) radius = 1.0; // Prevent zooming too close
+        break;
+    case '-': // Zoom out
+        radius += 0.5; // Move camera further
+        if (radius > 50.0) radius = 50.0; // Prevent zooming too far
+        break;
+    default:
+        break;
+    }
+
+    // Update the view after zooming
+    glutPostRedisplay();
 }
