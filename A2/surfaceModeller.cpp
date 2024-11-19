@@ -11,6 +11,8 @@
 #include <string.h>
 #include "surfaceModeller.h"
 #include "subdivcurve.h"
+#include <fstream>
+#include <iostream>
 typedef bool boolean;
 
 
@@ -1029,6 +1031,39 @@ void mouseMotionHandler3D(int x, int y)
 	glutPostRedisplay();
 }
 
+// Function to export mesh to a file
+void exportMesh(const char* filename) {
+    std::ofstream outFile(filename);
+
+    if (!outFile) {
+        std::cerr << "Error opening file for writing: " << filename << std::endl;
+        return;
+    }
+
+    // Write vertices to the file
+    for (int i = 0; i < subcurve.numCurvePoints * NUMBEROFSIDES; ++i) {
+        outFile << "v " << varray[i].x << " " << varray[i].y << " " << varray[i].z << "\n";
+    }
+
+    // Write normals to the file
+    for (int i = 0; i < subcurve.numCurvePoints * NUMBEROFSIDES; ++i) {
+        outFile << "vn " << varray[i].normal.x << " " << varray[i].normal.y << " " << varray[i].normal.z << "\n";
+    }
+
+    // Write faces (quads) to the file
+    for (int i = 0; i < (subcurve.numCurvePoints - 1) * NUMBEROFSIDES; ++i) {
+        Quad& q = qarray[i];
+        outFile << "f "
+                << q.vertexIndex[0] + 1 << "//" << q.vertexIndex[0] + 1 << " "
+                << q.vertexIndex[1] + 1 << "//" << q.vertexIndex[1] + 1 << " "
+                << q.vertexIndex[2] + 1 << "//" << q.vertexIndex[2] + 1 << " "
+                << q.vertexIndex[3] + 1 << "//" << q.vertexIndex[3] + 1 << "\n";
+    }
+
+    outFile.close();
+    std::cout << "Mesh exported successfully to " << filename << "\n";
+}
+
 void keyboardHandler3D(unsigned char key, int x, int y)
 {
 	
@@ -1040,6 +1075,9 @@ void keyboardHandler3D(unsigned char key, int x, int y)
 		// Esc, q, or Q key = Quit 
 		exit(0);
 		break;
+	case 'e':  // Export the mesh
+        exportMesh("surface_mesh.obj");
+        break;
 	case 'l':
 		if (drawAsLines)
 			drawAsLines = false;
