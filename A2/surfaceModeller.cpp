@@ -640,22 +640,20 @@ void reshape3D(int w, int h)
 	gluLookAt(eyeX, eyeY, eyeZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
 
-void display3D()
-{
+void display3D() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     glLoadIdentity();
 
-    // Adjust the camera's position based on the `radius` for zoom
+    // Camera position calculated from spherical coordinates
     gluLookAt(
-        eyeX, eyeY, radius, // Updated camera position
-        0.0, 0.0, 0.0,     // Look at origin
+        eyeX, eyeY, eyeZ,  // Camera position
+        0.0, 0.0, 0.0,     // Look at the origin (object center)
         0.0, 1.0, 0.0      // Up vector
     );
 
     drawGround();
 
-    // Build and draw the surface of revolution (Quad Mesh)
+    // Build and draw the surface of revolution
     buildVertexArray();
     buildQuadArray();
     computeQuadNormals();
@@ -677,6 +675,7 @@ void display3D()
     glPopMatrix();
     glutSwapBuffers();
 }
+
 
 
 void drawGround() 
@@ -1006,33 +1005,37 @@ void mouseScrollWheelHandler3D(int button, int dir, int xMouse, int yMouse)
 
 }
 
-void mouseMotionHandler3D(int x, int y)
-{
-	int dx = x - lastMouseX;
-	int dy = y - lastMouseY;
-	if (currentButton == GLUT_LEFT_BUTTON)
-	{
-      // Fill in this code to control camera "orbiting" around surface
-	  // Adjust azimuth (horizontal rotation)
-        GLdouble theta = atan2(eyeZ, eyeX) + dx * 0.01;
-        radius = sqrt(eyeX * eyeX + eyeZ * eyeZ);
-        eyeX = radius * cos(theta);
-        eyeZ = radius * sin(theta);
-	}
-	if (currentButton == GLUT_RIGHT_BUTTON) 
-	{
-      // Fill in this code to control camera elevation. Limit the elevation angle
-	  eyeY += dy * 0.05;
-        if (eyeY > 5.0) eyeY = 5.0; // Limit elevation
-        if (eyeY < -5.0) eyeY = -5.0;
-	}
-	else if (currentButton == GLUT_MIDDLE_BUTTON) 
-	{
-		// Fill in this code for zooming or ignore and use the scroll wheel
-	}
-	lastMouseX = x;
-	lastMouseY = y;
-	glutPostRedisplay();
+// Global variables for camera control
+static GLdouble theta = M_PI / 4.0;  // Horizontal angle (azimuth)
+static GLdouble phi = M_PI / 4.0;    // Vertical angle (elevation)
+// static GLdouble radius = 10.0;       // Distance from the object
+
+void mouseMotionHandler3D(int x, int y) {
+    int dx = x - lastMouseX;
+    int dy = y - lastMouseY;
+
+    if (currentButton == GLUT_LEFT_BUTTON) {
+        // Adjust azimuth (horizontal rotation)
+        theta += dx * 0.01;
+
+        // Adjust elevation (vertical rotation)
+        phi -= dy * 0.01;
+
+        // Clamp elevation to prevent flipping
+        if (phi > M_PI / 2.0 - 0.1) phi = M_PI / 2.0 - 0.1;
+        if (phi < -M_PI / 2.0 + 0.1) phi = -M_PI / 2.0 + 0.1;
+    }
+
+    // Update camera position based on spherical coordinates
+    eyeX = radius * cos(phi) * cos(theta);
+    eyeY = radius * sin(phi);
+    eyeZ = radius * cos(phi) * sin(theta);
+
+    lastMouseX = x;
+    lastMouseY = y;
+
+    // Request redisplay
+    glutPostRedisplay();
 }
 
 // Function to export mesh to a file
