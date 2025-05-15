@@ -55,6 +55,13 @@ The robot is built using OpenGL and GLUT, with modular code for each body part a
 
 ---
 
+
+## 🎬 Demo
+
+![3D Robot Demo](robot-demo.gif)
+
+---
+
 ## 📝 Assignments
 
 ### 📦 Assignment 1
@@ -98,6 +105,3 @@ The robot is built using OpenGL and GLUT, with modular code for each body part a
 
 ---
 
-## 🎬 Demo
-
-![3D Robot Demo](robot-demo.gif)
