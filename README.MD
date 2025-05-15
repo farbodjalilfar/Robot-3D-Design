@@ -94,3 +94,10 @@ The robot is built using OpenGL and GLUT, with modular code for each body part a
 1. Clone the repository:
    ```bash
    Code can be run by using run.sh in each Assignmnet
+
+
+---
+
+## 🎬 Demo
+
+![3D Robot Demo](robot-demo.gif)
